@@ -1,0 +1,79 @@
+# gold_arbitrage_bot_v1
+# Arbitrage system between OKX (xaut-usdt-swap) and MT5 (Exness XAUUSD)
+
+# === 📁 目录结构 ===
+# gold_arbitrage_bot_v1/
+# ├─ app.py                 → Flask WebUI
+# ├─ config.py              → 全局配置文件（API、账户、手数、方向等）
+# ├─ okx_connector.py       → OKX 挂单模块，成交回调触发 MT5 下单
+# ├─ mt5_connector.py       → MT5 下单逻辑（需安装 MetaTrader5 模块）
+# ├─ arbitrage_engine.py    → 主套利策略逻辑：差价监测、执行流程
+# ├─ scheduler.py           → 定时拉取报价、资金费率
+# ├─ templates/index.html   → Web UI 界面（修改方向/手数/账户参数）
+# ├─ deploy/install.bat     → Windows VPS 一键安装环境脚本
+# └─ requirements.txt       → Python依赖库
+
+
+# === 📖 README.md 内容建议 ===
+
+# gold_arbitrage_bot_v1
+
+【目标】
+- 实现 OKX U本位合约 `xaut-usdt-swap` 与 MT5 平台 Exness `XAUUSD` 的相关性套利与资金费套利
+- 支持前端可视化控制策略启动、手数调整、方向配置
+- 套利逻辑：OKX 限价挂单成交后，才触发 MT5 下单，对冲方向灵活
+
+---
+
+## Ὄ2 环境部署
+
+### Windows VPS、空白系统：
+
+1. 下载 Python 3.11.x （https://www.python.org/downloads/windows/）
+2. 启用 pip ，执行:
+```bash
+pip install -r requirements.txt
+```
+3. 启动 Flask Web服务:
+```bash
+python app.py
+```
+4. 打开浏览器输入: `http://localhost:5000`
+
+---
+
+## Ὅ6 文件说明
+
+| 文件 | 用途 |
+|--------|-----------------------------|
+| app.py | Flask Web UI 主程序 |
+| config.py | 常量和变量，支持帐号、密码、手数配置 |
+| okx_connector.py | OKX API 连接，限价挂单成交相关操作 |
+| mt5_connector.py | 管理 MT5 登陆和下单 |
+| arbitrage_engine.py | 主策略：差价管理，同步 OKX/MT5 操作 |
+| scheduler.py | 同步行情/资金费率，定时切换 |
+| templates/index.html | 前端 UI：输入 API，选择方向，设置手数 |
+| requirements.txt | 依赖包（Flask、MetaTrader5、okx sdk等） |
+
+---
+
+## Ὃ0 策略线路
+
+1. 系统监控 OKX/MT5 平台的平行价格
+2. 当 OKX 价格 - MT5 价格 大于 $10 触发下单
+3. 优先在 OKX 以 "限价卖出" 或 "限价买入" 挂单
+4. 成交后触发 MT5 对应方向下单（如果 OKX Sell，MT5 Buy）
+5. 积累资金费率，输出每日收益
+
+---
+
+## Ὂc 依赖列表 (requirements.txt)
+```txt
+flask
+okx
+MetaTrader5
+```
+
+---
+
+🚀 如果你需要我帮你完全生成每个文件的代码，或者帮你创建 GitHub 仓库实操输入，请告诉我！
